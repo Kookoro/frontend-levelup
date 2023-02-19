@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    //红绿灯
+    //红灯3s亮一次，绿灯1s亮一次，黄灯2s亮一次
+    function red(){
+        console.log('red')
+    }
+    function yellow(){
+        console.log('yellow')
+    }
+    function green(){
+        console.log('green')
+    }
+    const task = (timer,light)=>{
+        return new Promise((res,rej)=>{
+            setTimeout(() => {
+                if(light === 'red'){
+                    red()
+                }
+                if(light === 'yellow'){
+                    yellow()
+                }
+                if(light === 'green'){
+                    green()
+                }
+            }, timer);
+        })
+    }
+   const step = ()=>{
+    task(3000,'red').then(()=>{
+        task(1000,'green')
+    }).then(()=>{
+        task(1000,'yellow')
+    }).then(step)
+   }
+   const taskRunner = async ()=>{
+     await task(3000,'red')
+     await task(1000,'green')
+     await task(2000,'yellow')
+   }
+</script>
+</html>

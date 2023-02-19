@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    //实现一个图片预加载
+    const loadImg = (urlId)=>{
+        const url = `https://www.image.com/${urlId}`
+        return new Promise((res,rej)=>{
+            const img = new Image()
+            img.onload = ()=>{
+                res(urlId)
+            }
+            img.onerror = ()=>{
+                rej(urlId)
+            }
+            img.src = url
+        })
+    }
+    const urlIds = [1,2,3,4,5,6]
+    //方法1
+    urlIds.reduce((prevPromise,urlId)=>{
+        return  prevPromise.then(()=>{loadImg(urlId)})
+    },Promise.resolve())
+    //方法2
+    const loadImgHandler =  ()=>{
+        urlIds.map(async (id)=>{
+            await loadImg(id)
+        })
+    }
+
+    //将所有请求同时发出
+    const loadImgAll = (urlIds)=>{
+        const promiseArr = urlIds.map((id)=>loadImg(id))
+        Promise.all(promiseArr).then(()=>{
+            console.log('load success')
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+    //限制最大请求数 剩下的请求一次发出
+    const loadByLimit = (urlIds,fn,limit)=>{
+        const copyIds = [...urlIds]
+        if(copyIds.length<=limit){
+            Promise.all(copyIds.map((id)=>fn(id)))
+        }
+        const promiseArr = copyIds.splice(0,limit).map((id)=>loadImg(id))
+        copyIds.reduce((prevPromise,id)=>{
+            return prevPromise.then(()=>{
+                return Promise.race(promiseArr).catch((err)=>{console.log(err)}).then((resolveId)=>{
+                    //先处理第一个resolve的promise请求 然后获取其id，然后删掉，然后再装入新的请求
+                    const index = promiseArr.findIndex((pos)=>{
+                        return pos === resolveId
+                    })
+                    if(index){
+                        promiseArr.splice(index,1)
+                        promiseArr.push(loadImg(id))
+                    }
+                })
+            })
+        },Promise.resolve()).then(()=>{
+            //最后处理小于limit的所有请求
+            Promise.all(promiseArr)
+        })
+    }
+
+
+</script>
+</html>
