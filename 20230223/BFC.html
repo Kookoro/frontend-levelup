@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+
+    body{
+        width: 600px;
+        position: absolute;
+      
+    }
+    .left{
+        width: 80px;
+        height: 150px;
+        float:left;
+        background-color: red;
+    }
+    .right{
+        overflow: auto; /*利用overflow生成bfc*/
+        height: 200px;
+        background-color: black;
+    }
+
+</style>
+<body>
+    <div class="left"></div>
+    <div class="right"></div>
+</body>
+<script>
+    //bfc 块级格式化上下文
+    /*
+        创建一个特殊区域 该区域只有block box 即display 为block list-item table 的元素 ，参与布局 bfc的规则决定了如何在这个区域内布局，定位
+        其他的box类型  inline box display 为inline inline-block inline-table的元素
+        还有css3中的run in box
+    */
+   /*
+    如何形成bfc
+    根元素或包含根元素的元素
+    浮动元素 float部位none的元素
+    position 为 absoulute和fixed的绝对定位元素
+    有overflow属性且不为visible的块元素
+    内联块：display为inline-block的元素
+    表格display为table-cell的元素
+    表格标题 display 为table-caption的元素
+    display flow-root的元素
+    column-span：all的元素
+
+   */
+  /*
+  BFC的特点
+  边距重叠
+  清除浮动
+  自适应多栏布局
+  
+  */
+</script>
+</html>
